@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card p-5 mb-4 shadow-sm border-0" style="background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px);">
+    <h1 class="display-5 fw-bold text-primary mb-3">{{ title }}</h1>
+    <p class="lead text-muted">{{ description }}</p>
+    <hr class="my-4">
+    <div class="row align-items-center">
+        <div class="col-md-4 mb-3">
+            <h4 class="fw-semibold">Module Details</h4>
+            <ul class="list-group list-group-flush bg-transparent">
+                <li class="list-group-item bg-transparent"><strong>Status:</strong> Active Analysis</li>
+                <li class="list-group-item bg-transparent"><strong>Data Source:</strong> Simulated</li>
+                <li class="list-group-item bg-transparent"><strong>Confidence:</strong> 92%</li>
+            </ul>
+            <p class="mt-4 text-info p-3" style="font-size: 0.95rem; background: rgba(0, 243, 255, 0.05); border: 1px solid rgba(0, 243, 255, 0.2); border-radius: 12px; backdrop-filter: blur(5px);"><strong>Data Insights:</strong> {{ calculation_details }}</p>
+        </div>
+        <div class="col-md-8">
+            <canvas id="moduleChart" height="120"></canvas>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const ctx = document.getElementById('moduleChart').getContext('2d');
+        const gradientBlue = ctx.createLinearGradient(0, 0, 0, 400);
+        gradientBlue.addColorStop(0, 'rgba(13, 110, 253, 0.5)');
+        gradientBlue.addColorStop(1, 'rgba(13, 110, 253, 0.05)');
+
+        const gradientGreen = ctx.createLinearGradient(0, 0, 0, 400);
+        gradientGreen.addColorStop(0, 'rgba(26, 188, 156, 0.5)');
+        gradientGreen.addColorStop(1, 'rgba(26, 188, 156, 0.05)');
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: {{ labels|safe }},
+                datasets: [
+                    {
+                        label: 'Current Values',
+                        data: {{ data_values|safe }},
+                        borderColor: '#0d6efd',
+                        backgroundColor: gradientBlue,
+                        borderWidth: 3,
+                        tension: 0.4,
+                        fill: true
+                    },
+                    {
+                        label: 'Predicted Trend',
+                        data: {{ predictions|safe }},
+                        borderColor: '#1abc9c',
+                        backgroundColor: gradientGreen,
+                        borderWidth: 3,
+                        borderDash: [5, 5],
+                        tension: 0.4,
+                        fill: true
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'top' },
+                    tooltip: { mode: 'index', intersect: false }
+                },
+                scales: {
+                    x: { grid: { display: false } },
+                    y: { grid: { color: 'rgba(0,0,0,0.05)' } }
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

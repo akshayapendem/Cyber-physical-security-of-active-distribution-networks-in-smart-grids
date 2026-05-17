@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center fade-in">
+  <div class="col-md-6">
+    <div class="card p-4 shadow-sm border-0" style="background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px);">
+      <h2 class="mb-4">Create an Account</h2>
+      <form method="post" action="{% url 'register' %}">
+        {% csrf_token %}
+        <div class="mb-3">
+          {{ form.as_p }}
+        </div>
+        <div class="d-grid mt-4">
+            <button type="submit" class="btn btn-primary btn-glow btn-lg">Register</button>
+        </div>
+      </form>
+      <p class="mt-4 text-center">Already have an account? <a href="{% url 'login' %}">Login here</a>.</p>
+    </div>
+  </div>
+</div>
+{% endblock %}
